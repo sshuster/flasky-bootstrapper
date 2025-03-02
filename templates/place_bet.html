@@ -1,0 +1,74 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="h4 mb-0">Place Bet</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h3>Race: {{ race.title }}</h3>
+                        <p>{{ race.description }}</p>
+                        <p><strong>Date:</strong> {{ race.race_time.strftime('%B %d, %Y') }}</p>
+                        <p><strong>Time:</strong> {{ race.race_time.strftime('%I:%M %p') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>{{ driver.name }}</span>
+                                <span class="badge bg-dark">{{ driver.odds }}x</span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Car:</strong> {{ driver.car_model }}</p>
+                                <p class="text-muted">Potential return per $1: ${{ driver.odds }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ url_for('place_bet', race_id=race.id, driver_id=driver.id) }}">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Bet Amount ($)</label>
+                        <input type="number" class="form-control" id="amount" name="amount" min="1" max="{{ current_user.balance }}" step="0.01" required>
+                        <div class="form-text">Your current balance: ${{ "%.2f"|format(current_user.balance) }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Potential Winnings</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" id="potential-winnings" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Place Bet</button>
+                        <a href="{{ url_for('race_detail', race_id=race.id) }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('amount');
+        const potentialWinningsInput = document.getElementById('potential-winnings');
+        const odds = {{ driver.odds }};
+        
+        function updatePotentialWinnings() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const winnings = (amount * odds).toFixed(2);
+            potentialWinningsInput.value = winnings;
+        }
+        
+        amountInput.addEventListener('input', updatePotentialWinnings);
+        updatePotentialWinnings();
+    });
+</script>
+{% endblock %}

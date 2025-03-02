@@ -1,0 +1,97 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Races</h1>
+
+{% if live_races %}
+<div class="card mb-4 border-danger">
+    <div class="card-header bg-danger text-white">
+        <h2 class="h4 mb-0">Live Races</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for race in live_races %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 border-danger">
+                    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                        <span>{{ race.title }}</span>
+                        <span class="badge bg-warning text-dark">LIVE</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ race.description[:100] }}{% if race.description|length > 100 %}...{% endif %}</p>
+                        <a href="{{ url_for('race_detail', race_id=race.id) }}" class="btn btn-sm btn-danger">Watch Live</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h4 mb-0">Upcoming Races</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for race in upcoming_races %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>{{ race.title }}</span>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Date:</strong> {{ race.race_time.strftime('%B %d, %Y') }}</p>
+                        <p><strong>Time:</strong> {{ race.race_time.strftime('%I:%M %p') }}</p>
+                        <p class="card-text">{{ race.description[:100] }}{% if race.description|length > 100 %}...{% endif %}</p>
+                        <a href="{{ url_for('race_detail', race_id=race.id) }}" class="btn btn-sm btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% if completed_races %}
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <h2 class="h4 mb-0">Recent Results</h2>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Race</th>
+                        <th>Date</th>
+                        <th>Winner</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for race in completed_races %}
+                    <tr>
+                        <td>{{ race.title }}</td>
+                        <td>{{ race.race_time.strftime('%B %d, %Y') }}</td>
+                        <td>
+                            {% if race.winner_id %}
+                                {{ Driver.query.get(race.winner_id).name }}
+                            {% else %}
+                                Results pending
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('race_detail', race_id=race.id) }}" class="btn btn-sm btn-secondary">View Results</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

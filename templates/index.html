@@ -2,46 +2,63 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="jumbotron bg-dark text-white p-5 rounded mb-4">
+    <h1 class="display-4">Welcome to SpeedWager</h1>
+    <p class="lead">The premier destination for car racing enthusiasts to bet on their favorite races and drivers.</p>
+    <hr class="my-4">
+    <p>Join thousands of fans in the thrill of racing and betting. New users get $100 in free betting credits!</p>
+    {% if not current_user.is_authenticated %}
+    <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}" role="button">Sign Up Now</a>
+    {% else %}
+    <a class="btn btn-primary btn-lg" href="{{ url_for('races') }}" role="button">View Races</a>
+    {% endif %}
+</div>
+
+<h2 class="mb-4">Upcoming Featured Races</h2>
+
 <div class="row">
-    <div class="col-lg-12 text-center">
-        <h1 class="mt-5">Welcome to Flask App</h1>
-        <p class="lead">A simple responsive Flask application with Bootstrap</p>
+    {% for race in races %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                {{ race.title }}
+            </div>
+            <div class="card-body">
+                <p>{{ race.description }}</p>
+                <p><strong>Date:</strong> {{ race.race_time.strftime('%B %d, %Y') }}</p>
+                <p><strong>Time:</strong> {{ race.race_time.strftime('%I:%M %p') }}</p>
+                <a href="{{ url_for('race_detail', race_id=race.id) }}" class="btn btn-outline-primary">View Race</a>
+            </div>
+        </div>
     </div>
+    {% endfor %}
 </div>
 
 <div class="row mt-5">
     <div class="col-md-4 mb-4">
-        <div class="card h-100">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h2 class="card-title">Feature One</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.</p>
-            </div>
-            <div class="card-footer">
-                <a href="#" class="btn btn-primary">Learn More</a>
+                <i class="bi bi-trophy fs-1 text-warning mb-3"></i>
+                <h3>Best Odds</h3>
+                <p>We offer the most competitive odds in the racing betting industry.</p>
             </div>
         </div>
     </div>
-    
     <div class="col-md-4 mb-4">
-        <div class="card h-100">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h2 class="card-title">Feature Two</h2>
-                <p class="card-text">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-            </div>
-            <div class="card-footer">
-                <a href="#" class="btn btn-primary">Learn More</a>
+                <i class="bi bi-shield-check fs-1 text-success mb-3"></i>
+                <h3>Secure Betting</h3>
+                <p>Your bets and personal information are always protected with us.</p>
             </div>
         </div>
     </div>
-    
     <div class="col-md-4 mb-4">
-        <div class="card h-100">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h2 class="card-title">Feature Three</h2>
-                <p class="card-text">Vestibulum commodo nulla eu augue tincidunt rutrum. Suspendisse interdum lacus.</p>
-            </div>
-            <div class="card-footer">
-                <a href="#" class="btn btn-primary">Learn More</a>
+                <i class="bi bi-graph-up-arrow fs-1 text-primary mb-3"></i>
+                <h3>Live Tracking</h3>
+                <p>Follow your bets in real-time as races progress.</p>
             </div>
         </div>
     </div>

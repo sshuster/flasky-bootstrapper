@@ -1,0 +1,114 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h4 mb-0">My Profile</h2>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <i class="bi bi-person-circle display-1 text-primary"></i>
+                </div>
+                <h3 class="text-center">{{ current_user.username }}</h3>
+                <p class="text-center text-muted">{{ current_user.email }}</p>
+                <hr>
+                <h4>Account Balance</h4>
+                <div class="alert alert-success">
+                    <h2 class="text-center mb-0">${{ "%.2f"|format(current_user.balance) }}</h2>
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-outline-primary" disabled>Add Funds (Coming Soon)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h4 mb-0">Active Bets</h2>
+            </div>
+            <div class="card-body">
+                {% if active_bets %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Race</th>
+                                <th>Driver</th>
+                                <th>Amount</th>
+                                <th>Potential Winnings</th>
+                                <th>Race Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bet in active_bets %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for('race_detail', race_id=bet.race.id) }}">
+                                        {{ bet.race.title }}
+                                    </a>
+                                </td>
+                                <td>{{ bet.driver.name }}</td>
+                                <td>${{ "%.2f"|format(bet.amount) }}</td>
+                                <td>${{ "%.2f"|format(bet.amount * bet.driver.odds) }}</td>
+                                <td>{{ bet.race.race_time.strftime('%b %d, %Y') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p>You don't have any active bets at the moment.</p>
+                <p><a href="{{ url_for('races') }}" class="btn btn-primary">Browse Races</a></p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h2 class="h4 mb-0">Betting History</h2>
+            </div>
+            <div class="card-body">
+                {% if bet_history %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Race</th>
+                                <th>Driver</th>
+                                <th>Amount</th>
+                                <th>Result</th>
+                                <th>Date Placed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bet in bet_history %}
+                            <tr>
+                                <td>{{ bet.race.title }}</td>
+                                <td>{{ bet.driver.name }}</td>
+                                <td>${{ "%.2f"|format(bet.amount) }}</td>
+                                <td>
+                                    {% if bet.status == 'won' %}
+                                    <span class="badge bg-success">Won ${{ "%.2f"|format(bet.amount * bet.driver.odds) }}</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Lost</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ bet.placed_at.strftime('%b %d, %Y') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p>You don't have any completed bets yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

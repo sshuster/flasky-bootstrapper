@@ -4,6 +4,7 @@
 body {
     font-family: 'Arial', sans-serif;
     padding-top: 0;
+    background-color: #f8f9fa;
 }
 
 .navbar {
@@ -13,6 +14,7 @@ body {
 .card {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    margin-bottom: 20px;
 }
 
 .card:hover {
@@ -25,6 +27,33 @@ footer {
     margin-top: 2rem;
 }
 
+.jumbotron {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1542281286-9e0a16bb7366');
+    background-size: cover;
+    background-position: center;
+}
+
+.badge {
+    font-weight: 500;
+}
+
+/* Race status indicators */
+.badge.bg-danger {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     h1 {
@@ -34,4 +63,27 @@ footer {
     .card {
         margin-bottom: 20px;
     }
+    
+    .jumbotron {
+        padding: 2rem !important;
+    }
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Button hover effects */
+.btn-primary:hover, 
+.btn-success:hover,
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Driver cards styling */
+.card .badge.bg-dark {
+    font-size: 1.1rem;
 }
